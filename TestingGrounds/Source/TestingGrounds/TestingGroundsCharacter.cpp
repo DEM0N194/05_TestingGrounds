@@ -11,6 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
+#include "Perception/AISense_Hearing.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -107,6 +108,12 @@ void ATestingGroundsCharacter::BeginPlay()
 
 //////////////////////////////////////////////////////////////////////////
 // Input
+
+void ATestingGroundsCharacter::Landed(const FHitResult & Hit)
+{
+	Super::Landed(Hit);
+	UAISense_Hearing::ReportNoiseEvent(this, Hit.Location, 1.f, this);
+}
 
 void ATestingGroundsCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {

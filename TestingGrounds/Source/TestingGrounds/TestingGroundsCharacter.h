@@ -118,6 +118,9 @@ protected:
 	void EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location);
 	TouchData	TouchItem;
+
+
+	void Landed(const FHitResult& Hit) override;
 	
 protected:
 	// APawn interface
