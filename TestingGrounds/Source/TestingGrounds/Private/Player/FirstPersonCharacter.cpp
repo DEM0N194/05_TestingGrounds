@@ -1,7 +1,7 @@
 // Copyright 1998-2018 Epic Games, Inc. All Rights Reserved.
 
-#include "TestingGroundsCharacter.h"
-#include "TestingGroundsProjectile.h"
+#include "Player/FirstPersonCharacter.h"
+#include "Weapons/FirstPersonProjectile.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -13,9 +13,9 @@
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
 //////////////////////////////////////////////////////////////////////////
-// ATestingGroundsCharacter
+// AFirstPersonCharacter
 
-ATestingGroundsCharacter::ATestingGroundsCharacter()
+AFirstPersonCharacter::AFirstPersonCharacter()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
@@ -58,7 +58,7 @@ ATestingGroundsCharacter::ATestingGroundsCharacter()
 	// are set in the derived blueprint asset named MyCharacter to avoid direct content references in C++.
 }
 
-void ATestingGroundsCharacter::BeginPlay()
+void AFirstPersonCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
@@ -70,13 +70,13 @@ void ATestingGroundsCharacter::BeginPlay()
 //////////////////////////////////////////////////////////////////////////
 // Input
 
-void ATestingGroundsCharacter::Landed(const FHitResult & Hit)
+void AFirstPersonCharacter::Landed(const FHitResult & Hit)
 {
 	Super::Landed(Hit);
 	UAISense_Hearing::ReportNoiseEvent(this, Hit.Location, 1.f, this);
 }
 
-void ATestingGroundsCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
+void AFirstPersonCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	// set up gameplay key bindings
 	check(PlayerInputComponent);
@@ -86,22 +86,22 @@ void ATestingGroundsCharacter::SetupPlayerInputComponent(class UInputComponent* 
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	// Bind fire event
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ATestingGroundsCharacter::OnFire);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AFirstPersonCharacter::OnFire);
 
 	// Bind movement events
-	PlayerInputComponent->BindAxis("MoveForward", this, &ATestingGroundsCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &ATestingGroundsCharacter::MoveRight);
+	PlayerInputComponent->BindAxis("MoveForward", this, &AFirstPersonCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &AFirstPersonCharacter::MoveRight);
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
 	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("TurnRate", this, &ATestingGroundsCharacter::TurnAtRate);
+	PlayerInputComponent->BindAxis("TurnRate", this, &AFirstPersonCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
-	PlayerInputComponent->BindAxis("LookUpRate", this, &ATestingGroundsCharacter::LookUpAtRate);
+	PlayerInputComponent->BindAxis("LookUpRate", this, &AFirstPersonCharacter::LookUpAtRate);
 }
 
-void ATestingGroundsCharacter::OnFire()
+void AFirstPersonCharacter::OnFire()
 {
 	// try and fire a projectile
 	if (ProjectileClass != NULL)
@@ -118,7 +118,7 @@ void ATestingGroundsCharacter::OnFire()
 			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 			
 			// spawn the projectile at the muzzle
-			World->SpawnActor<ATestingGroundsProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+			World->SpawnActor<AFirstPersonProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 		}
 	}
 
@@ -140,7 +140,7 @@ void ATestingGroundsCharacter::OnFire()
 	}
 }
 
-void ATestingGroundsCharacter::MoveForward(float Value)
+void AFirstPersonCharacter::MoveForward(float Value)
 {
 	if (Value != 0.0f)
 	{
@@ -149,7 +149,7 @@ void ATestingGroundsCharacter::MoveForward(float Value)
 	}
 }
 
-void ATestingGroundsCharacter::MoveRight(float Value)
+void AFirstPersonCharacter::MoveRight(float Value)
 {
 	if (Value != 0.0f)
 	{
@@ -158,13 +158,13 @@ void ATestingGroundsCharacter::MoveRight(float Value)
 	}
 }
 
-void ATestingGroundsCharacter::TurnAtRate(float Rate)
+void AFirstPersonCharacter::TurnAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
 }
 
-void ATestingGroundsCharacter::LookUpAtRate(float Rate)
+void AFirstPersonCharacter::LookUpAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
