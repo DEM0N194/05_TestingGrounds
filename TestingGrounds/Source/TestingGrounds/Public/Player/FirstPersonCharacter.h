@@ -6,8 +6,6 @@
 #include "GameFramework/Character.h"
 #include "FirstPersonCharacter.generated.h"
 
-class UInputComponent;
-
 UCLASS(config=Game)
 class AFirstPersonCharacter : public ACharacter
 {
@@ -17,14 +15,6 @@ class AFirstPersonCharacter : public ACharacter
 	UPROPERTY(VisibleDefaultsOnly, Category=Mesh)
 	class USkeletalMeshComponent* Mesh1P;
 
-	/** Gun mesh: 1st person view (seen only by self) */
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	class USkeletalMeshComponent* FP_Gun;
-
-	/** Location on gun mesh where projectiles should spawn. */
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	class USceneComponent* FP_MuzzleLocation;
-
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FirstPersonCameraComponent;
@@ -33,7 +23,10 @@ public:
 	AFirstPersonCharacter();
 
 protected:
-	virtual void BeginPlay();
+	virtual void BeginPlay() override;
+
+	/** Called when the character lands */
+	virtual void Landed(const FHitResult& Hit) override;
 
 public:
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
@@ -44,26 +37,15 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 
-	/** Gun muzzle's offset from the characters location */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
-	FVector GunOffset;
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
+	TSubclassOf<class AGun> GunBlueprint = nullptr;
 
-	/** Projectile class to spawn */
-	UPROPERTY(EditDefaultsOnly, Category=Projectile)
-	TSubclassOf<class AFirstPersonProjectile> ProjectileClass;
+private:
+	AGun* Gun;
 
-	/** Sound to play each time we fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
-	class USoundBase* FireSound;
-
-	/** AnimMontage to play each time we fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	class UAnimMontage* FireAnimation;
+	class UInputComponent* InputComponent = nullptr;
 
 protected:
-	
-	/** Fires a projectile. */
-	void OnFire();
 
 	/** Handles moving forward/backward */
 	void MoveForward(float Val);
@@ -82,13 +64,10 @@ protected:
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
 	 */
 	void LookUpAtRate(float Rate);
-
-	/** Called when the character lands */
-	void Landed(const FHitResult& Hit) override;
 	
 protected:
 	// APawn interface
-	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
+	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 	// End of APawn interface
 
 public:
