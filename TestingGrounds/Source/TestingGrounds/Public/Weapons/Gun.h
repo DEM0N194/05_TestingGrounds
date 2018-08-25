@@ -42,6 +42,7 @@ public:
 public:
 
 	/** Fires a projectile. */
+	UFUNCTION(BlueprintCallable)
 	void OnFire();
 
 	/** Set the AnimInstance to which the Fire AnimMontage will be applied on */
