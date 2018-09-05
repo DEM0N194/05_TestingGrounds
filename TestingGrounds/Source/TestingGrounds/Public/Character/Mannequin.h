@@ -24,15 +24,15 @@ private:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Mesh")
 	class USkeletalMeshComponent* FPMesh;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Gun", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
 	AGun* Gun;
 
 public:
 	// Sets default values for this character's properties
 	AMannequin();
 	
-	UFUNCTION(BlueprintCallable, Category = "Gun")
-	void Fire();
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	void PullTrigger();
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

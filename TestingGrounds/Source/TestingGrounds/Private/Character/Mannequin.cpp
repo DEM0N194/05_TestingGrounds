@@ -4,6 +4,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/InputComponent.h"
 #include "Weapons/Gun.h"
 #include "Engine/World.h"
 #include "Engine/Engine.h"
@@ -27,7 +28,7 @@ AMannequin::AMannequin()
 	FPMesh->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
 }
 
-void AMannequin::Fire()
+void AMannequin::PullTrigger()
 {
 	Gun->OnFire();
 }
@@ -45,6 +46,11 @@ void AMannequin::BeginPlay()
 	Gun = GetWorld()->SpawnActor<AGun>(GunBlueprint);
 	Gun->AttachToComponent(FPMesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), FName("GripPoint"));
 	Gun->SetAnimInstance(FPMesh->GetAnimInstance());
+
+	if (InputComponent != nullptr)
+	{
+		InputComponent->BindAction("Fire", IE_Pressed, this, &AMannequin::PullTrigger);
+	}
 }
 
 // Called every frame
