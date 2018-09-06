@@ -27,6 +27,8 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
 	AGun* Gun;
 
+	USkeletalMeshComponent* TPMesh;
+
 public:
 	// Sets default values for this character's properties
 	AMannequin();
@@ -39,6 +41,8 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	virtual void UnPossessed() override;
 
 protected:
 	// Called when the game starts or when spawned

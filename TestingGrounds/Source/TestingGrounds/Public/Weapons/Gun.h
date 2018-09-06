@@ -37,7 +37,11 @@ public:
 
 	/** AnimMontage to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	class UAnimMontage* FireAnimation;
+	class UAnimMontage* FPFireAnimation;
+
+	/** AnimMontage to play each time we fire */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	class UAnimMontage* TPFireAnimation;
 
 public:
 
@@ -46,10 +50,11 @@ public:
 	void OnFire();
 
 	/** Set the AnimInstance to which the Fire AnimMontage will be applied on */
-	void SetAnimInstance(class UAnimInstance* InAnimInstance);
+	void SetAnimInstance(class UAnimInstance* FirstPerson, UAnimInstance* ThirdPerson);
 
 private:
 	/** AnimInstance to apply the AnimMontage on */
-	class UAnimInstance* AnimInstance;
+	UAnimInstance* FPAnimInstance;
+	UAnimInstance* TPAnimInstance;
 	
 };

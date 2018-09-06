@@ -57,17 +57,19 @@ void AGun::OnFire()
 	}
 
 	// try and play a firing animation if specified
-	if (FireAnimation != nullptr)
+	if (FPAnimInstance != nullptr && FPFireAnimation != nullptr)
 	{
-		// Get the animation object for the arms mesh
-		if (AnimInstance != nullptr)
-		{
-			AnimInstance->Montage_Play(FireAnimation, 1.f);
-		}
+		FPAnimInstance->Montage_Play(FPFireAnimation, 1.f);
+	}
+	// try and play a firing animation if specified
+	if (TPAnimInstance != nullptr && TPFireAnimation != nullptr)
+	{
+		TPAnimInstance->Montage_Play(TPFireAnimation, 1.f);
 	}
 }
 
-void AGun::SetAnimInstance(UAnimInstance* InAnimInstance)
+void AGun::SetAnimInstance(UAnimInstance* FirstPerson, UAnimInstance* ThirdPerson)
 {
-	AnimInstance = InAnimInstance;
+	FPAnimInstance = FirstPerson;
+	TPAnimInstance = ThirdPerson;
 }

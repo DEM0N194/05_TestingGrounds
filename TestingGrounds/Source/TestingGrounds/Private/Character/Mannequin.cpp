@@ -26,6 +26,8 @@ AMannequin::AMannequin()
 	FPMesh->CastShadow = false;
 	FPMesh->RelativeLocation = FVector(3.3f, -5.0f, -161.0f);
 	FPMesh->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
+
+	TPMesh = GetMesh();
 }
 
 void AMannequin::PullTrigger()
@@ -44,8 +46,15 @@ void AMannequin::BeginPlay()
 		if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, TEXT("Error: Gun_BP in BP_Character.uasset is set to NONE!"));
 	}
 	Gun = GetWorld()->SpawnActor<AGun>(GunBlueprint);
-	Gun->AttachToComponent(FPMesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), FName("GripPoint"));
-	Gun->SetAnimInstance(GetMesh()->GetAnimInstance());
+	if (IsPlayerControlled())
+	{
+		Gun->AttachToComponent(FPMesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), FName("GripPoint"));
+	}
+	else
+	{
+		Gun->AttachToComponent(TPMesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), FName("GripPoint"));
+	}
+	Gun->SetAnimInstance(FPMesh->GetAnimInstance(), TPMesh->GetAnimInstance());
 
 	if (InputComponent != nullptr)
 	{
@@ -66,5 +75,15 @@ void AMannequin::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AMannequin::UnPossessed()
+{
+	Super::UnPossessed();
+	// Reattach to the TPMesh when we die
+	if (Gun != nullptr)
+	{
+		Gun->AttachToComponent(TPMesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), FName("GripPoint"));
+	}
 }
 

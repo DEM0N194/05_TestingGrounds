@@ -55,7 +55,7 @@ void AFirstPersonCharacter::BeginPlay()
 	}
 	Gun = GetWorld()->SpawnActor<AGun>(GunBlueprint);
 	Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), FName("GripPoint"));
-	Gun->SetAnimInstance(Mesh1P->GetAnimInstance());
+	Gun->SetAnimInstance(Mesh1P->GetAnimInstance(), nullptr);
 	
 	// Bind fire event
 	if (InputComponent)
