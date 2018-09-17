@@ -2,12 +2,13 @@
 
 #include "Terrain/Tile.h"
 #include "Engine/World.h"
+#include "DrawDebugHelpers.h"
 // Sets default values
 ATile::ATile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	
 }
 
 void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int32 MinSpawn, int32 MaxSpawn)
@@ -30,7 +31,8 @@ void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int32 MinSpawn, int32 MaxSp
 void ATile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	CastSphere(GetActorLocation(), 300.0f);
 }
 
 // Called every frame
@@ -38,4 +40,13 @@ void ATile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+bool ATile::CastSphere(FVector Location, float Radius)
+{
+	FHitResult HR;
+	bool HasHit = GetWorld()->SweepSingleByChannel(HR, Location, Location, FQuat::Identity, ECC_Camera, FCollisionShape::MakeSphere(Radius));
+	FColor ResultColor = HasHit ? FColor::Red : FColor::Green;
+	DrawDebugSphere(GetWorld(), Location, Radius, 100, ResultColor, true, 100);
+	return HasHit;
 }
