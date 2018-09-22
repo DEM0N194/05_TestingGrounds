@@ -4,6 +4,7 @@
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
 #include "ActorPool.h"
+#include "NavigationSystem.h"
 
 // Sets default values
 ATile::ATile()
@@ -18,6 +19,7 @@ void ATile::SetPool(UActorPool* ActorPool)
 	Pool = ActorPool;
 
 	PositionNavMeshBoundsVolume();
+	UNavigationSystemV1::GetCurrent(GetWorld())->Build();
 }
 
 void ATile::PositionNavMeshBoundsVolume()
@@ -29,7 +31,7 @@ void ATile::PositionNavMeshBoundsVolume()
 		return;
 	}
 	UE_LOG(LogTemp, Warning, TEXT("[%s] Checked out: %s"), *GetName(), *NavMeshBoundsVolume->GetName());
-	NavMeshBoundsVolume->SetActorLocation(GetActorLocation());
+	NavMeshBoundsVolume->SetActorLocation(GetActorLocation()+FVector(2000.0f, 0.0f, 0.0f));
 }
 
 void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int32 MinSpawn, int32 MaxSpawn, float Radius, float MinScale, float MaxScale)
