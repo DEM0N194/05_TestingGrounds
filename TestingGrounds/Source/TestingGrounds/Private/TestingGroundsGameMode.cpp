@@ -4,6 +4,7 @@
 #include "TestingGroundsHUD.h"
 #include "Player/FirstPersonCharacter.h"
 #include "UObject/ConstructorHelpers.h"
+#include "ActorPool.h"
 
 ATestingGroundsGameMode::ATestingGroundsGameMode()
 	: Super()
@@ -14,4 +15,7 @@ ATestingGroundsGameMode::ATestingGroundsGameMode()
 
 	// use our custom HUD class
 	HUDClass = ATestingGroundsHUD::StaticClass();
+
+	// create a ActorPool default subobject
+	NavMeshBoundsVolumePool = CreateDefaultSubobject<UActorPool>(FName("NavMeshBoundsVolumePool"));
 }

@@ -3,12 +3,33 @@
 #include "Terrain/Tile.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
+#include "ActorPool.h"
+
 // Sets default values
 ATile::ATile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	
+}
+
+void ATile::SetPool(UActorPool* ActorPool)
+{
+	Pool = ActorPool;
+
+	PositionNavMeshBoundsVolume();
+}
+
+void ATile::PositionNavMeshBoundsVolume()
+{
+	NavMeshBoundsVolume = Pool->Checkout();
+	if (NavMeshBoundsVolume == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[%s] Not enough actors in pool."), *GetName());
+		return;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("[%s] Checked out: %s"), *GetName(), *NavMeshBoundsVolume->GetName());
+	NavMeshBoundsVolume->SetActorLocation(GetActorLocation());
 }
 
 void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int32 MinSpawn, int32 MaxSpawn, float Radius, float MinScale, float MaxScale)
@@ -30,8 +51,13 @@ void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int32 MinSpawn, int32 MaxSp
 void ATile::BeginPlay()
 {
 	Super::BeginPlay();
+}
 
-	CanSpawnAtLocation(GetActorLocation(), 300.0f);
+void ATile::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	Pool->Return(NavMeshBoundsVolume);
 }
 
 // Called every frame

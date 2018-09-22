@@ -13,6 +13,10 @@ class ATestingGroundsGameMode : public AGameModeBase
 
 public:
 	ATestingGroundsGameMode();
+
+protected:
+	UPROPERTY(BlueprintReadOnly)
+	class UActorPool* NavMeshBoundsVolumePool;
 };
 
 
