@@ -43,6 +43,24 @@ void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, const FSpawnParams& SpawnPa
 	}
 }
 
+void ATile::PlaceAIPawns(TSubclassOf<APawn> ToSpawn, const FSpawnParams& SpawnParams)
+{
+	TArray<FSpawnPosition> SpawnPositions = RandomSpawnPostitions(SpawnParams);
+	for (FSpawnPosition SpawnPosition : SpawnPositions)
+	{
+		PlaceAIPawn(ToSpawn, SpawnPosition);
+	}
+}
+
+void ATile::PlaceAIPawn(TSubclassOf<APawn> ToSpawn,const FSpawnPosition& SpawnPosition)
+{
+	APawn* Spawned = GetWorld()->SpawnActor<APawn>(ToSpawn);
+	Spawned->SetActorRelativeLocation(SpawnPosition.Location);
+	Spawned->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
+	Spawned->SetActorRotation(FRotator(0.0f, SpawnPosition.Rotation, 0.0f));
+	Spawned->SpawnDefaultController();
+}
+
 // Called when the game starts or when spawned
 void ATile::BeginPlay()
 {

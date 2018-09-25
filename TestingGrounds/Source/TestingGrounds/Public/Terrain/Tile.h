@@ -54,6 +54,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void PlaceActors(TSubclassOf<AActor> ToSpawn, const FSpawnParams& SpawnParams);
 
+	UFUNCTION(BlueprintCallable, meta = (ShortTooltip = "Scaling Ignored", ToolTip = "MinScale and MaxScale are irrelevant."))
+	void PlaceAIPawns(TSubclassOf<APawn> ToSpawn, const FSpawnParams& SpawnParams);
+
 private:
 
 	void PositionNavMeshBoundsVolume();
@@ -75,6 +78,8 @@ private:
 	TArray<FSpawnPosition> RandomSpawnPostitions(const FSpawnParams& SpawnParams);
 
 	void PlaceActor(TSubclassOf<AActor> ToSpawn, const FSpawnPosition& SpawnPosition);
+
+	void PlaceAIPawn(TSubclassOf<APawn> ToSpawn, const FSpawnPosition &SpawnPosition);
 
 	bool CanSpawnAtLocation(FVector Location, float Radius);
 	
